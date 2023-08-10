@@ -1,6 +1,10 @@
 # Hoverboard Control over the internet
 ![Overview](images/hoverboard_inet_control.drawio.png)
-This modified version of Hoverboard-Web-Serial-Control allows to use two instances of the control website: One started on a receiver Android device and one on a sender Android device. The Joystick commands get forwarded to the receiver device via WebRTC and the receiver device sends the data to the Hoverboard (Via Serial/Blueooth LE serial)
+This modified version of Hoverboard-Web-Serial-Control allows to use two instances of the control website: 
+
+https://fivef.github.io/Hoverboard-Web-Serial-Control/
+
+One started on a receiver Android device and one on a sender Android device. The Joystick commands get forwarded to the receiver device via WebRTC and the receiver device sends the data to the Hoverboard (Via Serial/Blueooth LE serial)
 
 - [x] Sending of the joystick control data via webrtc.
 - [ ] Forwarding of the data via bluetooth
