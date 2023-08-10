@@ -31,8 +31,9 @@
           <div class="two columns" id="APIdiv">
             <label for="API">API</label>
             <select class="u-full-width" id="API" onchange="toggleAPI()">
-                <option value="serial" selected>Serial</option>
+                <option value="serial">Serial</option>
                 <option value="bluetooth">Ble</option>
+                <option value="rtc" selected>RTC</option>
             </select>
           </div>
           <div class="two columns" id='bauddiv'>
@@ -100,6 +101,7 @@
           <button id="pause" class="button" type="button" onclick="pauseUpdate()"><ion-icon name="pause"></ion-icon></button>
           <button id="trash" class="button" type="button" onclick="deleteData()" ><ion-icon name="trash"></ion-icon></button> 
           <button id="connect" class="button" type="button" onclick="serial.connect()"><ion-icon name="flash"></ion-icon></button>
+          <button id="hostserver" class="button" type="button" onclick="startRtcReceiver()"><ion-icon name="flash"></ion-icon></button>
         </div>
       </div>
       <div class="row" id="statsdiv">
@@ -161,8 +163,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule="" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
-    
-    
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <script type="text/javascript" src="js/struct.min.js"></script>
     <script type="text/javascript" src="js/timer.js"></script>
     <script type="text/javascript" src="js/log.js"></script>

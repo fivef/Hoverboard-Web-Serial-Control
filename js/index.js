@@ -314,3 +314,54 @@ function sendCommand() {
   let encoder = new TextEncoder();
   serial.send(encoder.encode(command));
 }
+
+//Below RTC, TODO: maybe put to extra file
+
+function startRtcReceiver() {
+  console.log('Starting receiver');
+
+  var peer = new Peer('5254f3ac-1f73-47a4-ae25-c4d0499a0f8e', {
+    debug:0
+  });
+
+  peer.on('open', function (id) {
+      console.log('My peer ID is: ' + id);
+  });
+
+
+  peer.on('connection', function (conn) {
+    console.log('Connected');
+
+    // Receive messages
+    conn.on('data', function(data) {
+      console.log('Received', data);
+    });
+
+    conn.on('error', function(err) {
+      console.log(err);
+      alert('' + err);
+    });
+  });
+
+  peer.on('disconnected', function () {
+    //status.innerHTML = "Connection lost. Please reconnect";
+    console.log('Connection lost. Please reconnect');
+
+    // Workaround for peer.reconnect deleting previous id
+    // peer.id = lastPeerId;
+    // peer._lastServerId = lastPeerId;
+    peer.reconnect();
+  });
+
+  peer.on('close', function() {
+      // conn = null;
+      // status.innerHTML = "Connection destroyed. Please refresh";
+      console.log('Connection destroyed');
+  });
+
+  peer.on('error', function (err) {
+      console.log(err);
+      alert('' + err);
+  });
+  
+}
