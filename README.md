@@ -7,6 +7,8 @@ https://fivef.github.io/Hoverboard-Web-Serial-Control/
 One started on a receiver Android device and one on a sender Android device. The Joystick commands get forwarded to the receiver device via WebRTC and the receiver device sends the data to the Hoverboard (Via Serial/Blueooth LE serial)
 
 - [x] Sending of the joystick control data via webrtc.
+- [ ] currently the RTC peer id is fixed. We need to create a new id and display it on the receiver. It has to be entered on the sender side.
+- [ ] save RTC peer id in cookie on both sides to allow seamless reconnection.
 - [ ] Fix button for RTC server
 - [ ] Forwarding of the data via bluetooth
 - [ ] Forwarding of the data via serial

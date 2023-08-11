@@ -10,6 +10,7 @@ var viewIn = document.getElementById('view');
 
 var send_btn = document.getElementById('send');
 var connect_btn = document.getElementById('connect');
+var rtc_server_btn = document.getElementById('rtcserver');
 var pause_btn = document.getElementById('pause');
 var pause1_btn = document.getElementById('pause1');
 var trash_btn = document.getElementById('trash');
@@ -317,51 +318,76 @@ function sendCommand() {
 
 //Below RTC, TODO: maybe put to extra file
 
+var rtc_receiver = null;
+
+function setRtcReceiverRunning() {
+  rtc_server_btn.innerHTML ='STOP WEB RTC Receiver';
+}
+
+function setRtcReceiverPeerConnected() {
+  rtc_server_btn.style.backgroundColor = "green";
+}
+
+function setRTCReceiverStopped() {
+  rtc_server_btn.innerHTML = 'Start Web RTP Receiver';
+}
+
 function startRtcReceiver() {
   console.log('Starting receiver');
 
-  var peer = new Peer('5254f3ac-1f73-47a4-ae25-c4d0499a0f8e', {
+  rtc_receiver = new Peer('5254f3ac-1f73-47a4-ae25-c4d0499a0f8e', {
     debug:0
   });
 
-  peer.on('open', function (id) {
-      console.log('My peer ID is: ' + id);
+  rtc_receiver.on('open', function (id) {
+    console.log('My peer ID is: ' + id);
+    setRtcReceiverRunning();
   });
 
 
-  peer.on('connection', function (conn) {
+  rtc_receiver.on('connection', function (conn) {
     console.log('Connected');
+
+    setRtcReceiverPeerConnected();
 
     // Receive messages
     conn.on('data', function(data) {
       console.log('Received', data);
+      if (serial.connected) {
+        serial.send(data);
+      }
     });
 
     conn.on('error', function(err) {
       console.log(err);
+      setRTCReceiverStopped();
       alert('' + err);
     });
   });
 
-  peer.on('disconnected', function () {
+  rtc_receiver.on('disconnected', function () {
     //status.innerHTML = "Connection lost. Please reconnect";
     console.log('Connection lost. Please reconnect');
 
     // Workaround for peer.reconnect deleting previous id
     // peer.id = lastPeerId;
     // peer._lastServerId = lastPeerId;
-    peer.reconnect();
+    //peer.reconnect();
+
+    rtc_server_btn.innerText('Start Web RTP Receiver')
   });
 
-  peer.on('close', function() {
+  rtc_receiver.on('close', function() {
       // conn = null;
       // status.innerHTML = "Connection destroyed. Please refresh";
-      console.log('Connection destroyed');
+    console.log('Connection destroyed');
+    setRTCReceiverStopped();
   });
 
-  peer.on('error', function (err) {
-      console.log(err);
-      alert('' + err);
+  rtc_receiver.on('error', function (err) {
+    console.log(err);
+    setRTCReceiverStopped();
+    alert('' + err);
   });
   
 }
