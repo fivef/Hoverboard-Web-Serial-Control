@@ -326,10 +326,15 @@ function setRtcReceiverRunning() {
 
 function setRtcReceiverPeerConnected() {
   rtc_server_btn.style.backgroundColor = "green";
+  
+
+  if (serial) { serial.rtc_peer_connected = true };
 }
 
 function setRTCReceiverStopped() {
   rtc_server_btn.innerHTML = 'Start Web RTP Receiver';
+  
+  if (serial) { serial.rtc_peer_connected = false };
 }
 
 function startRtcReceiver() {
@@ -347,14 +352,15 @@ function startRtcReceiver() {
 
   rtc_receiver.on('connection', function (conn) {
     console.log('Connected');
-
     setRtcReceiverPeerConnected();
 
     // Receive messages
     conn.on('data', function(data) {
-      console.log('Received', data);
+      
+      const dataview = new Int8Array(data);
+      console.log('Reeived', dataview);
       if (serial.connected) {
-        serial.send(data);
+        serial.send(dataview);
       }
     });
 

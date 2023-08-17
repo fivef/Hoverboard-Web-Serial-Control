@@ -2,6 +2,7 @@ class Serial {
   constructor(size) {
     this.API = 'serial';
     this.connected = false;
+    this.rtc_peer_connected = false;
     this.protocol = "ascii";
     this.lastStatsUpdate = Date.now();
     this.statsUpdateFrequency = 500;
@@ -487,6 +488,10 @@ class Serial {
         break;
     }
 
+    //Don't send if data is received via web rtc
+    if (rtc_receiver) {
+      if (this.rtc_peer_connected) return;
+    }
     this.send(bytes);
 
   };
