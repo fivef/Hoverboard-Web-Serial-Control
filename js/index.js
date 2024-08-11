@@ -335,32 +335,61 @@ function saveSettings() {
 }
 
 function displayCurrentSettings() {
-  const currentSettingsDiv = document.getElementById('currentSettings');
-  currentSettingsDiv.innerHTML = '<h4>Current Settings:</h4>';
-  for (let param in control.params) {
-    currentSettingsDiv.innerHTML += `<p>${param}: <span id="current${param}">${control.params[param].value}</span></p>`;
-  }
+  // This function is now handled within parseGetResponse
 }
 
 function populateSettingsInputs() {
-  const settingsContent = document.getElementById('settingsContent');
-  settingsContent.innerHTML = '';
-  for (let param in control.params) {
-    settingsContent.innerHTML += `
-      <div class="row">
-        <div class="six columns">
-          <label for="setting${param}">${param}</label>
-          <input class="u-full-width" type="number" id="setting${param}" 
-                 min="${control.params[param].min}" max="${control.params[param].max}" 
-                 value="${control.params[param].value}">
-        </div>
-        <div class="six columns">
-          <p class="help-text">${control.params[param].help}</p>
-        </div>
-      </div>
-    `;
+  sendGetCommand();
+}
+
+function sendGetCommand() {
+  if (serial.connected) {
+    serial.send(new TextEncoder().encode("$GET\r\n"));
+  } else {
+    console.error("Serial not connected");
   }
 }
+
+function parseGetResponse(response) {
+  const lines = response.split('\n');
+  const settingsContent = document.getElementById('settingsContent');
+  const currentSettingsDiv = document.getElementById('currentSettings');
+  
+  settingsContent.innerHTML = '';
+  currentSettingsDiv.innerHTML = '<h4>Current Settings:</h4>';
+
+  lines.forEach(line => {
+    if (line.startsWith('# name:')) {
+      const [, name, value, , min, max] = line.match(/"([^"]+)"\s+value:(\d+)\s+init:\d+\s+min:(-?\d+)\s+max:(\d+)/);
+      
+      if (name in control.params) {
+        settingsContent.innerHTML += `
+          <div class="row">
+            <div class="six columns">
+              <label for="setting${name}">${name}</label>
+              <input class="u-full-width" type="number" id="setting${name}" 
+                     min="${min}" max="${max}" 
+                     value="${value}">
+            </div>
+            <div class="six columns">
+              <p class="help-text">${control.params[name].help}</p>
+            </div>
+          </div>
+        `;
+      } else {
+        currentSettingsDiv.innerHTML += `<p>${name}: <span id="current${name}">${value}</span></p>`;
+      }
+    }
+  });
+}
+
+// Add an event listener for the serial data
+serial.addEventListener("data", function(event) {
+  const response = new TextDecoder().decode(event.data);
+  if (response.includes('# name:')) {
+    parseGetResponse(response);
+  }
+});
 
 function toggleSubplot(){
   graph.subplot(subplotIn.value == "yes");
