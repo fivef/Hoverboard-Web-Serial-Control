@@ -186,7 +186,8 @@ function switchView(newView){
       controlcnv.style.display = "none";
       speedocnv.style.display  = "none";
       settingsdiv.style.display = "none";
-      loggerdiv.style.display  = "block";
+      loggerdiv.style.display = "block";
+      outputdiv.style.display = "block";
       pause_btn.style.visibility = "hidden";
       trash_btn.style.visibility = "hidden";
       break;
@@ -207,7 +208,8 @@ function switchView(newView){
       loggerdiv.style.display  = "none";
       statsdiv.style.display   = "none";
       commanddiv.style.display = "none";
-      chartdiv.style.display   = "block";
+      chartdiv.style.display = "block";
+      outputdiv.style.display = "block";
       pause_btn.style.visibility = "visible";
       trash_btn.style.visibility = "visible";
       break;
@@ -219,7 +221,8 @@ function switchView(newView){
       chartindiv.style.display = "none";  
       ctrlindiv.style.display  = "block";
       recdiv.style.display     = "none";
-      senddiv.style.display    = "block";
+      senddiv.style.display = "block";
+      outputdiv.style.display = "block";
       pause_btn.style.visibility = "hidden";
       trash_btn.style.visibility = "hidden";
       
@@ -231,6 +234,8 @@ function switchView(newView){
       speedocnv.style.display  = "none";
       settingsdiv.style.display = "none";
       controlcnv.style.display = "block";
+      outputdiv.style.display = "block";
+
       control.initCanvas();
       break;
     case "speedo":
@@ -253,7 +258,8 @@ function switchView(newView){
       commanddiv.style.display = "none";
       controlcnv.style.display = "none";
       settingsdiv.style.display = "none";
-      speedocnv.style.display  = "block";
+      speedocnv.style.display = "block";
+      outputdiv.style.display = "block";
       speedo.initCanvas();
       speedocnv.click();
       break;
