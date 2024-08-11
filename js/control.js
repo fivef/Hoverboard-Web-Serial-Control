@@ -20,15 +20,15 @@ class Control {
 
     // Initialize parameters
     this.params = {
-      CTRL_MOD: { value: 1, min: 1, max: 3 },
-      CTRL_TYP: { value: 0, min: 0, max: 2 },
-      I_MOT_MAX: { value: 0, min: 1, max: 40 },
-      N_MOT_MAX: { value: 0, min: 10, max: 2000 },
-      FI_WEAK_ENA: { value: 0, min: 0, max: 1 },
-      FI_WEAK_HI: { value: 0, min: 0, max: 1500 },
-      FI_WEAK_LO: { value: 0, min: 0, max: 1000 },
-      FI_WEAK_MAX: { value: 0, min: 0, max: 20 },
-      PHA_ADV_MAX: { value: 0, min: 0, max: 55 }
+      CTRL_MOD: { value: 1, min: 1, max: 3, help: "Ctrl mode 1: VLT 2: SPD 3: TRQ" },
+      CTRL_TYP: { value: 0, min: 0, max: 2, help: "Ctrl type 0: COM 1: SIN 2: FOC" },
+      I_MOT_MAX: { value: 0, min: 1, max: 40, help: "Max phase current A" },
+      N_MOT_MAX: { value: 0, min: 10, max: 2000, help: "Maximum motor speed (RPM)" },
+      FI_WEAK_ENA: { value: 0, min: 0, max: 1, help: "Field weakening enable (0: Disabled, 1: Enabled)" },
+      FI_WEAK_HI: { value: 0, min: 0, max: 1500, help: "Field weakening high threshold (RPM)" },
+      FI_WEAK_LO: { value: 0, min: 0, max: 1000, help: "Field weakening low threshold (RPM)" },
+      FI_WEAK_MAX: { value: 0, min: 0, max: 20, help: "Maximum field weakening current (A) (CTRL_TYP FOC only)" },
+      PHA_ADV_MAX: { value: 0, min: 0, max: 55, help: "Maximum phase advance (degrees) (CTRL_TYP Sinusoidal only)" }
     };
 
     // Load settings from localStorage if available

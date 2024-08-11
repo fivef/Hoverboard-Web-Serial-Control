@@ -348,6 +348,9 @@ function populateSettingsInputs() {
                  min="${control.params[param].min}" max="${control.params[param].max}" 
                  value="${control.params[param].value}">
         </div>
+        <div class="six columns">
+          <p class="help-text">${control.params[param].help}</p>
+        </div>
       </div>
     `;
   }
