@@ -278,6 +278,14 @@ function switchView(newView){
       controlcnv.style.display = "none";
       speedocnv.style.display  = "none";
       settingsdiv.style.display = "block";
+      
+      // Display current settings
+      document.getElementById('currentSetting1').textContent = localStorage.getItem('setting1') || 'Not set';
+      document.getElementById('currentSetting2').textContent = localStorage.getItem('setting2') || 'Not set';
+      
+      // Set input values to current settings
+      document.getElementById('settingInput1').value = localStorage.getItem('setting1') || '';
+      document.getElementById('settingInput2').value = localStorage.getItem('setting2') || '';
       break;
   }
 }
