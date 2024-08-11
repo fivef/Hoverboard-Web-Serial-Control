@@ -107,4 +107,24 @@ color:orange;
 
 .value{
   color:lightgoldenrodyellow;
- } 
+ } #settingsdiv {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#settingsContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.help-text {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 5px;
+}
