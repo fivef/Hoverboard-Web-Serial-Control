@@ -352,6 +352,7 @@ function sendGetCommand() {
 }
 
 function parseGetResponse(response) {
+  console.log('Parsing GET response:', response);
   const lines = response.split('\n');
   const settingsContent = document.getElementById('settingsContent');
   const currentSettingsDiv = document.getElementById('currentSettings');
@@ -359,7 +360,8 @@ function parseGetResponse(response) {
   settingsContent.innerHTML = '';
   currentSettingsDiv.innerHTML = '<h4>Current Settings:</h4>';
 
-  lines.forEach(line => {
+  lines.forEach((line, index) => {
+    console.log(`Processing line ${index}:`, line);
     if (line.startsWith('# name:')) {
       const [, name, value, , min, max] = line.match(/"([^"]+)"\s+value:(\d+)\s+init:\d+\s+min:(-?\d+)\s+max:(\d+)/);
       

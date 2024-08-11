@@ -437,6 +437,7 @@ class Serial {
   }
 
   update(message) {
+    console.log('Updating with message:', message);
     this.success++;
     graph.updateData(message);
     telemetry.update(message);
@@ -444,11 +445,13 @@ class Serial {
     
     // Accumulate $GET response
     if (this.protocol === "ascii" && typeof message === 'string' && message.startsWith('# name:')) {
+      console.log('Accumulating GET response:', message);
       if (!this.getResponse) {
         this.getResponse = '';
       }
       this.getResponse += message + '\n';
       if (message.trim() === 'OK') {
+        console.log('GET response complete, parsing...');
         parseGetResponse(this.getResponse);
         this.getResponse = null;
       }
