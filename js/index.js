@@ -344,6 +344,7 @@ function populateSettingsInputs() {
 
 function sendGetCommand() {
   if (serial.connected) {
+    console.info("Send $GET command");
     serial.send(new TextEncoder().encode("$GET\r\n"));
   } else {
     console.error("Serial not connected");
@@ -387,6 +388,7 @@ function parseGetResponse(response) {
 serial.addEventListener("data", function(event) {
   const response = new TextDecoder().decode(event.data);
   if (response.includes('# name:')) {
+    console.info("Received response");
     parseGetResponse(response);
   }
 });
