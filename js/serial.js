@@ -441,6 +441,20 @@ class Serial {
     graph.updateData(message);
     telemetry.update(message);
     if (watchIn.checked) log.writeLog(message);
+    
+    // Store the last message if it's ASCII
+    if (this.protocol === "ascii") {
+      this.lastMessage = Object.entries(message).map(([key, value]) => `${key}:${value}`).join(" ");
+    }
+  }
+
+  getLastMessage() {
+    if (this.lastMessage) {
+      const message = this.lastMessage;
+      this.lastMessage = null;
+      return message;
+    }
+    return null;
   }
 
   sendBinary() {

@@ -384,7 +384,6 @@ function parseGetResponse(response) {
   });
 }
 
-// Modify the update function to check for $GET responses
 function update(){
   // Send Commands
   if (serial.connected){
@@ -403,29 +402,6 @@ function update(){
     }
   }
 }
-
-// Add a method to Serial class to get the last message
-Serial.prototype.getLastMessage = function() {
-  if (this.lastMessage) {
-    const message = this.lastMessage;
-    this.lastMessage = null;
-    return message;
-  }
-  return null;
-};
-
-// Modify the Serial class update method to store the last message
-Serial.prototype.update = function(message) {
-  this.success++;
-  graph.updateData(message);
-  telemetry.update(message);
-  if (watchIn.checked) log.writeLog(message);
-  
-  // Store the last message if it's ASCII
-  if (this.protocol === "ascii") {
-    this.lastMessage = Object.entries(message).map(([key, value]) => `${key}:${value}`).join(" ");
-  }
-};
 
 function toggleSubplot(){
   graph.subplot(subplotIn.value == "yes");
