@@ -18,9 +18,21 @@ class Control {
     this.inputs["SWC"]   = {name:"SWC"      ,type:"switch"  ,posx:0,posy:0,x:0,y:0,r:0,normx:0,normy:1,minx:0    ,maxx:0   ,stepx:0   ,miny:1    ,maxy:3   ,stepy:1   ,hold:true ,vibrate:true ,visible:true,dispName:true,dispVal:true};
     this.inputs["SWD"]   = {name:"SWD"      ,type:"switch"  ,posx:0,posy:0,x:0,y:0,r:0,normx:0,normy:1,minx:0    ,maxx:0   ,stepx:0   ,miny:1    ,maxy:2   ,stepy:1   ,hold:true ,vibrate:true ,visible:true,dispName:true,dispVal:true};
 
+    // Initialize parameters
+    this.params = {
+      CTRL_MOD: { value: 1, min: 1, max: 3 },
+      CTRL_TYP: { value: 0, min: 0, max: 2 },
+      I_MOT_MAX: { value: 0, min: 1, max: 40 },
+      N_MOT_MAX: { value: 0, min: 10, max: 2000 },
+      FI_WEAK_ENA: { value: 0, min: 0, max: 1 },
+      FI_WEAK_HI: { value: 0, min: 0, max: 1500 },
+      FI_WEAK_LO: { value: 0, min: 0, max: 1000 },
+      FI_WEAK_MAX: { value: 0, min: 0, max: 20 },
+      PHA_ADV_MAX: { value: 0, min: 0, max: 55 }
+    };
+
     // Load settings from localStorage if available
-    this.setting1 = localStorage.getItem('setting1') || '';
-    this.setting2 = localStorage.getItem('setting2') || '';
+    this.loadSettings();
     
     for (let key in this.inputs){
       this.inputs[key].prevx = this.inputs[key].normx;
@@ -706,12 +718,28 @@ class Control {
     return this.clamp((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min, out_min,out_max);
   }
 
-  updateSettings(setting1, setting2) {
-    this.setting1 = setting1;
-    this.setting2 = setting2;
-    // Here you can add logic to use these settings in your control operations
-    console.log('Settings updated:', this.setting1, this.setting2);
-    // You might want to call other methods here to apply the new settings
+  loadSettings() {
+    for (let param in this.params) {
+      const storedValue = localStorage.getItem(param);
+      if (storedValue !== null) {
+        this.params[param].value = Number(storedValue);
+      }
+    }
+  }
+
+  updateSettings(newSettings) {
+    for (let param in newSettings) {
+      if (this.params.hasOwnProperty(param)) {
+        const value = Number(newSettings[param]);
+        if (!isNaN(value) && value >= this.params[param].min && value <= this.params[param].max) {
+          this.params[param].value = value;
+          localStorage.setItem(param, value);
+        } else {
+          console.warn(`Invalid value for ${param}: ${newSettings[param]}`);
+        }
+      }
+    }
+    console.log('Settings updated:', this.params);
     this.display(); // Refresh the display with new settings
   }
 }

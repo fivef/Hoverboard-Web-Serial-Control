@@ -279,13 +279,8 @@ function switchView(newView){
       speedocnv.style.display  = "none";
       settingsdiv.style.display = "block";
       
-      // Display current settings
-      document.getElementById('currentSetting1').textContent = localStorage.getItem('setting1') || 'Not set';
-      document.getElementById('currentSetting2').textContent = localStorage.getItem('setting2') || 'Not set';
-      
-      // Set input values to current settings
-      document.getElementById('settingInput1').value = localStorage.getItem('setting1') || '';
-      document.getElementById('settingInput2').value = localStorage.getItem('setting2') || '';
+      populateSettingsInputs();
+      displayCurrentSettings();
       break;
   }
 }
@@ -320,18 +315,43 @@ function toggleEngine(){
 }
 
 function saveSettings() {
-  // Get values from settings inputs
-  const setting1 = document.getElementById('settingInput1').value;
-  const setting2 = document.getElementById('settingInput2').value;
+  const newSettings = {};
+  for (let param in control.params) {
+    const inputElement = document.getElementById(`setting${param}`);
+    if (inputElement) {
+      newSettings[param] = inputElement.value;
+    }
+  }
 
-  // Here you would typically save these settings, perhaps to localStorage
-  localStorage.setItem('setting1', setting1);
-  localStorage.setItem('setting2', setting2);
-
-  // Optionally, update the Control object with new settings
-  control.updateSettings(setting1, setting2);
-
+  control.updateSettings(newSettings);
   alert('Settings saved!');
+}
+
+function displayCurrentSettings() {
+  const currentSettingsDiv = document.getElementById('currentSettings');
+  currentSettingsDiv.innerHTML = '<h4>Current Settings:</h4>';
+  for (let param in control.params) {
+    currentSettingsDiv.innerHTML += `<p>${param}: <span id="current${param}">${control.params[param].value}</span></p>`;
+  }
+}
+
+function populateSettingsInputs() {
+  const settingsDiv = document.getElementById('settingsdiv');
+  settingsDiv.innerHTML = '<h3>Settings</h3>';
+  for (let param in control.params) {
+    settingsDiv.innerHTML += `
+      <div class="row">
+        <div class="six columns">
+          <label for="setting${param}">${param}</label>
+          <input class="u-full-width" type="number" id="setting${param}" 
+                 min="${control.params[param].min}" max="${control.params[param].max}" 
+                 value="${control.params[param].value}">
+        </div>
+      </div>
+    `;
+  }
+  settingsDiv.innerHTML += '<button class="button-primary" onclick="saveSettings()">Save Settings</button>';
+  settingsDiv.innerHTML += '<div id="currentSettings"></div>';
 }
 
 function toggleSubplot(){
