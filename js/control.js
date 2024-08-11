@@ -17,6 +17,10 @@ class Control {
     this.inputs["VRB"]   = {name:"VRB"      ,type:"knob"    ,posx:0,posy:0,x:0,y:0,r:0,normx:0,normy:0,minx:0    ,maxx:0   ,stepx:0   ,miny:0    ,maxy:1000,stepy:1000,hold:true ,vibrate:false ,visible:true,dispName:true,dispVal:false};
     this.inputs["SWC"]   = {name:"SWC"      ,type:"switch"  ,posx:0,posy:0,x:0,y:0,r:0,normx:0,normy:1,minx:0    ,maxx:0   ,stepx:0   ,miny:1    ,maxy:3   ,stepy:1   ,hold:true ,vibrate:true ,visible:true,dispName:true,dispVal:true};
     this.inputs["SWD"]   = {name:"SWD"      ,type:"switch"  ,posx:0,posy:0,x:0,y:0,r:0,normx:0,normy:1,minx:0    ,maxx:0   ,stepx:0   ,miny:1    ,maxy:2   ,stepy:1   ,hold:true ,vibrate:true ,visible:true,dispName:true,dispVal:true};
+
+    // Load settings from localStorage if available
+    this.setting1 = localStorage.getItem('setting1') || '';
+    this.setting2 = localStorage.getItem('setting2') || '';
     
     for (let key in this.inputs){
       this.inputs[key].prevx = this.inputs[key].normx;
@@ -700,5 +704,14 @@ class Control {
   
   map(x, in_min, in_max, out_min, out_max) {
     return this.clamp((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min, out_min,out_max);
+  }
+
+  updateSettings(setting1, setting2) {
+    this.setting1 = setting1;
+    this.setting2 = setting2;
+    // Here you can add logic to use these settings in your control operations
+    console.log('Settings updated:', this.setting1, this.setting2);
+    // You might want to call other methods here to apply the new settings
+    this.display(); // Refresh the display with new settings
   }
 }

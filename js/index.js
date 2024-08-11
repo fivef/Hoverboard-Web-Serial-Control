@@ -185,6 +185,7 @@ function switchView(newView){
       chartdiv.style.display   = "none";
       controlcnv.style.display = "none";
       speedocnv.style.display  = "none";
+      settingsdiv.style.display = "none";
       loggerdiv.style.display  = "block";
       pause_btn.style.visibility = "hidden";
       trash_btn.style.visibility = "hidden";
@@ -202,6 +203,7 @@ function switchView(newView){
 
       controlcnv.style.display = "none";
       speedocnv.style.display = "none";
+      settingsdiv.style.display = "none";
       loggerdiv.style.display  = "none";
       statsdiv.style.display   = "none";
       commanddiv.style.display = "none";
@@ -227,6 +229,7 @@ function switchView(newView){
       commanddiv.style.display = "none";
       enginediv.style.display  = "none";
       speedocnv.style.display  = "none";
+      settingsdiv.style.display = "none";
       controlcnv.style.display = "block";
       control.initCanvas();
       break;
@@ -249,9 +252,32 @@ function switchView(newView){
       statsdiv.style.display   = "none";
       commanddiv.style.display = "none";
       controlcnv.style.display = "none";
+      settingsdiv.style.display = "none";
       speedocnv.style.display  = "block";
       speedo.initCanvas();
       speedocnv.click();
+      break;
+    case "settings":
+      APIdiv.style.display     = "none";
+      bauddiv.style.display    = "none";
+      pause_btn.style.visibility = "hidden";
+      trash_btn.style.visibility = "hidden";
+      
+      statsindiv.style.display = "none";
+      watchindiv.style.display = "none";
+      chartindiv.style.display = "none";  
+      ctrlindiv.style.display  = "none";
+      recdiv.style.display     = "none";
+      senddiv.style.display    = "none";
+      enginediv.style.display  = "none";
+      
+      loggerdiv.style.display  = "none";
+      chartdiv.style.display   = "none";
+      statsdiv.style.display   = "none";
+      commanddiv.style.display = "none";
+      controlcnv.style.display = "none";
+      speedocnv.style.display  = "none";
+      settingsdiv.style.display = "block";
       break;
   }
 }
@@ -283,6 +309,21 @@ function toggleEngine(){
   }else{
     stop();
   }
+}
+
+function saveSettings() {
+  // Get values from settings inputs
+  const setting1 = document.getElementById('settingInput1').value;
+  const setting2 = document.getElementById('settingInput2').value;
+
+  // Here you would typically save these settings, perhaps to localStorage
+  localStorage.setItem('setting1', setting1);
+  localStorage.setItem('setting2', setting2);
+
+  // Optionally, update the Control object with new settings
+  control.updateSettings(setting1, setting2);
+
+  alert('Settings saved!');
 }
 
 function toggleSubplot(){
