@@ -384,14 +384,48 @@ function parseGetResponse(response) {
   });
 }
 
-// Add an event listener for the serial data
-serial.addEventListener("data", function(event) {
-  const response = new TextDecoder().decode(event.data);
-  if (response.includes('# name:')) {
-    console.info("Received response");
-    parseGetResponse(response);
+// Modify the update function to check for $GET responses
+function update(){
+  // Send Commands
+  if (serial.connected){
+    if (control.protocol != "off") serial.sendBinary();
   }
-});
+  if (view == "log") log.updateLog();
+  if (view == "chart") graph.updateGraph();
+  if (speedo.demo) speedo.update();
+
+  // Check for $GET response
+  if (serial.protocol === "ascii") {
+    const response = serial.getLastMessage();
+    if (response && response.includes('# name:')) {
+      console.info("Received response");
+      parseGetResponse(response);
+    }
+  }
+}
+
+// Add a method to Serial class to get the last message
+Serial.prototype.getLastMessage = function() {
+  if (this.lastMessage) {
+    const message = this.lastMessage;
+    this.lastMessage = null;
+    return message;
+  }
+  return null;
+};
+
+// Modify the Serial class update method to store the last message
+Serial.prototype.update = function(message) {
+  this.success++;
+  graph.updateData(message);
+  telemetry.update(message);
+  if (watchIn.checked) log.writeLog(message);
+  
+  // Store the last message if it's ASCII
+  if (this.protocol === "ascii") {
+    this.lastMessage = Object.entries(message).map(([key, value]) => `${key}:${value}`).join(" ");
+  }
+};
 
 function toggleSubplot(){
   graph.subplot(subplotIn.value == "yes");
