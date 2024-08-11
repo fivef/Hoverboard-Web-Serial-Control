@@ -392,15 +392,6 @@ function update(){
   if (view == "log") log.updateLog();
   if (view == "chart") graph.updateGraph();
   if (speedo.demo) speedo.update();
-
-  // Check for $GET response
-  if (serial.protocol === "ascii") {
-    const response = serial.getLastMessage();
-    if (response && response.includes('# name:')) {
-      console.info("Received response");
-      parseGetResponse(response);
-    }
-  }
 }
 
 function toggleSubplot(){
