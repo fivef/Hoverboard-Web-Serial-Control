@@ -160,24 +160,11 @@
       </div>
       <canvas class="u-full-width" id="controlcnv"></canvas>
       <canvas class="u-full-width" id="speedocnv"></canvas>
-      <div id="settingsdiv" style="display: none;">
+      <div id="settingsdiv" style="display: none; max-height: 80vh; overflow-y: auto;">
         <h3>Settings</h3>
-        <div class="row">
-          <div class="six columns">
-            <label for="settingInput1">Setting 1</label>
-            <input class="u-full-width" type="text" id="settingInput1">
-          </div>
-          <div class="six columns">
-            <label for="settingInput2">Setting 2</label>
-            <input class="u-full-width" type="text" id="settingInput2">
-          </div>
-        </div>
+        <div id="settingsContent"></div>
         <button class="button-primary" onclick="saveSettings()">Save Settings</button>
-        <div id="currentSettings" style="margin-top: 20px;">
-          <h4>Current Settings:</h4>
-          <p>Setting 1: <span id="currentSetting1"></span></p>
-          <p>Setting 2: <span id="currentSetting2"></span></p>
-        </div>
+        <div id="currentSettings" style="margin-top: 20px;"></div>
       </div>
     </div>
 

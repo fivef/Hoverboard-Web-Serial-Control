@@ -336,10 +336,10 @@ function displayCurrentSettings() {
 }
 
 function populateSettingsInputs() {
-  const settingsDiv = document.getElementById('settingsdiv');
-  settingsDiv.innerHTML = '<h3>Settings</h3>';
+  const settingsContent = document.getElementById('settingsContent');
+  settingsContent.innerHTML = '';
   for (let param in control.params) {
-    settingsDiv.innerHTML += `
+    settingsContent.innerHTML += `
       <div class="row">
         <div class="six columns">
           <label for="setting${param}">${param}</label>
@@ -350,8 +350,6 @@ function populateSettingsInputs() {
       </div>
     `;
   }
-  settingsDiv.innerHTML += '<button class="button-primary" onclick="saveSettings()">Save Settings</button>';
-  settingsDiv.innerHTML += '<div id="currentSettings"></div>';
 }
 
 function toggleSubplot(){
