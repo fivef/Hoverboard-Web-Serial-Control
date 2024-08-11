@@ -278,6 +278,7 @@ function switchView(newView){
       controlcnv.style.display = "none";
       speedocnv.style.display  = "none";
       settingsdiv.style.display = "block";
+      outputdiv.style.display  = "none";
       
       populateSettingsInputs();
       displayCurrentSettings();
