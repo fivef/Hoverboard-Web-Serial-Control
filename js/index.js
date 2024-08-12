@@ -426,7 +426,7 @@ function parseGetResponse(response) {
           settingsContent.innerHTML += `
             <div class="row">
               <div class="five columns">
-                <label for="setting${name}">${name}</label>
+                <label for="setting${name}">${control.params[name].help}<br>${name}</label>
                 <input class="u-full-width" type="number" id="setting${name}" 
                        min="${min}" max="${max}" 
                        value="${value}">
@@ -436,7 +436,7 @@ function parseGetResponse(response) {
                 <button class="button-primary" onclick="resetSetting('${name}')">Reset</button>
               </div>
               <div class="six columns">
-                <p class="help-text">${control.params[name].help}</p>
+                <p class="help-text">Min: ${min}, Max: ${max}</p>
               </div>
             </div>
           `;
