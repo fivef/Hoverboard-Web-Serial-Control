@@ -346,12 +346,13 @@ function saveSettings() {
   sendSetCommands(newSettings);
 }
 
-function sendSetCommands(settings) {
+async function sendSetCommands(settings) {
   if (serial.connected) {
     for (let param in settings) {
       const command = `$SET ${param} ${settings[param]}\r\n`;
       log.write(command, 3);
       serial.send(new TextEncoder().encode(command));
+      await new Promise(resolve => setTimeout(resolve, 50)); // Sleep for 50ms
     }
     alert('Settings saved and sent to the hoverboard!');
   } else {
