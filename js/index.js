@@ -426,7 +426,7 @@ function parseGetResponse(response) {
           settingsContent.innerHTML += `
             <div class="row">
               <div class="five columns">
-                <label for="setting${name}">${control.params[name].help}<br>${name}</label>
+                <label for="setting${name}">${control.params[name].help} (${name})</label>
                 <input class="u-full-width" type="number" id="setting${name}" 
                        min="${min}" max="${max}" 
                        value="${value}">
