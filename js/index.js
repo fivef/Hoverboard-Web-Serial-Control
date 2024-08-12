@@ -348,26 +348,31 @@ function saveSettings() {
 
 async function sendSetCommands(settings) {
   if (serial.connected) {
-    for (let param in settings) {
-      const command = `$SET ${param} ${settings[param]}\r\n`;
-      log.write(command, 3);
-      console.log(command);
-      
-      await serial.send(new TextEncoder().encode(command), param);
-      
-      // Wait for the response
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => reject(new Error('Timeout waiting for response')), 5000);
-        const checkResponse = setInterval(() => {
-          if (!serial.waiting_for_response) {
-            clearInterval(checkResponse);
-            clearTimeout(timeout);
-            resolve();
-          }
-        }, 100);
-      });
+    try {
+      for (let param in settings) {
+        const command = `$SET ${param} ${settings[param]}\r\n`;
+        log.write(command, 3);
+        console.log(command);
+        
+        await serial.send(new TextEncoder().encode(command), param);
+        
+        // Wait for the response
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Timeout waiting for response')), 5000);
+          const checkResponse = setInterval(() => {
+            if (!serial.waiting_for_response) {
+              clearInterval(checkResponse);
+              clearTimeout(timeout);
+              resolve();
+            }
+          }, 100);
+        });
+      }
+      alert('Settings saved and sent to the hoverboard!');
+    } catch (error) {
+      console.error('Error sending settings:', error);
+      alert(`Error sending settings: ${error.message}. Please try again.`);
     }
-    alert('Settings saved and sent to the hoverboard!');
   } else {
     alert('Settings saved locally. Connect to the hoverboard to apply changes.');
   }
