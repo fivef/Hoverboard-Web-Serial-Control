@@ -8,6 +8,8 @@ class Serial {
     this.statsUpdateFrequency = 500;
 
     this.rtc_conn = null;
+    this.waiting_for_response = false;
+    this.waiting_param = '';
 
     // Buffer
     this.bufferSize = size;
@@ -429,6 +431,19 @@ class Serial {
       return false;
     }
 
+    if (this.waiting_for_response) {
+      if (string.startsWith(`# name:"${this.waiting_param}"`)) {
+        // Correct parameter response received, now waiting for OK
+        this.waiting_for_response = 'OK';
+        return true;
+      } else if (this.waiting_for_response === 'OK' && string.trim() === 'OK') {
+        // OK received after correct parameter response
+        this.waiting_for_response = false;
+        this.waiting_param = '';
+        return true;
+      }
+    }
+
     if (string.trim() === 'OK') {
       if (this.getResponse) {
         parseGetResponse(this.getResponse);
@@ -543,7 +558,7 @@ class Serial {
 
   };
 
-  async send(bytes) {
+  async send(bytes, param = '') {
     if (this.API == 'serial') {
       // Web Serial
       this.outputStream = this.port.writable;
@@ -568,6 +583,11 @@ class Serial {
     } else {
       console.log("Error when sending. Unknown API type: ");
       console.log(this.API);
+    }
+    
+    if (param) {
+      this.waiting_for_response = true;
+      this.waiting_param = param;
     }
   }
 }

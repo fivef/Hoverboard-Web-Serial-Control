@@ -351,8 +351,19 @@ async function sendSetCommands(settings) {
     for (let param in settings) {
       const command = `$SET ${param} ${settings[param]}\r\n`;
       log.write(command, 3);
-      serial.send(new TextEncoder().encode(command));
-      await new Promise(resolve => setTimeout(resolve, 200)); // Sleep for 200ms
+      await serial.send(new TextEncoder().encode(command), param);
+      
+      // Wait for the response
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('Timeout waiting for response')), 5000);
+        const checkResponse = setInterval(() => {
+          if (!serial.waiting_for_response) {
+            clearInterval(checkResponse);
+            clearTimeout(timeout);
+            resolve();
+          }
+        }, 100);
+      });
     }
     alert('Settings saved and sent to the hoverboard!');
   } else {
