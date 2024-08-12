@@ -399,16 +399,18 @@ class Serial {
       return false;
     }
 
+    if (string.trim() === 'OK') {
+      parseGetResponse(this.getResponse);
+      this.getResponse = '';
+      return true;
+    }
+
     // Parse $GET response
     if (string.startsWith('# name:')) {
       if (!this.getResponse) {
         this.getResponse = '';
       }
       this.getResponse += string + '\n';
-      if (string.trim() === 'OK') {
-        parseGetResponse(this.getResponse);
-        this.getResponse = null;
-      }
       return true;
     }
 
