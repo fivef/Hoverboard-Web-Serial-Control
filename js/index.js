@@ -45,6 +45,7 @@ var enginediv  = document.getElementById('enginediv');
 
 var view = 'log';
 var lastClick = 0;
+var previousProtocol = '';
 
 window.addEventListener("load", function(event) {
 
@@ -165,6 +166,17 @@ function update(){
 }
 
 function switchView(newView){
+  if (view === "settings" && newView !== "settings") {
+    // Leaving settings view
+    serial.protocol = previousProtocol;
+    recin.value = previousProtocol;
+  } else if (newView === "settings") {
+    // Entering settings view
+    previousProtocol = serial.protocol;
+    serial.protocol = "ascii";
+    recin.value = "ascii";
+  }
+
   view = newView;
   serialdiv.style.visibility = "visible";
   switch (view){
