@@ -108,14 +108,11 @@ color:orange;
 .value{
   color:lightgoldenrodyellow;
  } #settingsdiv {
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   background-color: white;
   padding: 20px;
   overflow-y: auto;
+  margin-top: 20px;
 }
 
 #settingsContent {
