@@ -21,6 +21,7 @@ class Serial {
     this.bluetoothService = 0xffe0;
     this.bluetoothCharacteristic = 0xffe1;
     this.bleSending = false;
+    this.lastConnectedDevice = null;
 
     // Transmition Statistics
     this.error = 0;
@@ -121,7 +122,10 @@ class Serial {
     } else if (this.API == 'rtc') {
       this.connectRTC();
     } else if (this.API == 'bluetooth'){
-      this.connectBluetooth();
+      const reconnected = await this.tryReconnectLastDevice();
+      if (!reconnected) {
+        this.connectBluetooth();
+      }
     } else {
       console.log("Error when connecting. Unknown API type: ");
       console.log(this.API);
@@ -171,40 +175,57 @@ class Serial {
     }
   }
 
-  connectBluetooth() {
-    let options = {
-      acceptAllDevices: true,
-      optionalServices: [this.bluetoothService],
-      //filters: [{ name: [this.bluetoothName] },{services: [this.bluetoothService]}],
-    };
-    navigator.bluetooth.requestDevice(options)
-      .then(device => {
-        //console.log(device);
-        this.device = device;
-        device.addEventListener('gattserverdisconnected', this.onDisconnected);
-        return device.gatt.connect();
-      }).
-      then((server) => {
-        //console.log(server);
-        this.server = server;
-        return server.getPrimaryService(this.bluetoothService);
-      })
-      .then((service) => {
-        //console.log(service);
-        this.service = service;
-        return service.getCharacteristic(this.bluetoothCharacteristic);
-      })
-      .then(characteristic => characteristic.startNotifications())
-      .then((characteristic) => {
-        //console.log(characteristic);
-        this.characteristic = characteristic;
-        // Update UI
-        this.setConnected();
-        this.characteristic.addEventListener('characteristicvaluechanged', this.handleCharacteristicValueChanged);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+  async connectBluetooth() {
+    try {
+      let device;
+      if (this.lastConnectedDevice && this.lastConnectedDevice.gatt.connected) {
+        device = this.lastConnectedDevice;
+      } else {
+        let options = {
+          acceptAllDevices: true,
+          optionalServices: [this.bluetoothService],
+        };
+        device = await navigator.bluetooth.requestDevice(options);
+      }
+
+      this.device = device;
+      device.addEventListener('gattserverdisconnected', this.onDisconnected);
+      const server = await device.gatt.connect();
+      this.server = server;
+      const service = await server.getPrimaryService(this.bluetoothService);
+      this.service = service;
+      const characteristic = await service.getCharacteristic(this.bluetoothCharacteristic);
+      await characteristic.startNotifications();
+      this.characteristic = characteristic;
+      
+      // Update UI
+      this.setConnected();
+      this.characteristic.addEventListener('characteristicvaluechanged', this.handleCharacteristicValueChanged);
+      
+      // Store the last connected device
+      this.lastConnectedDevice = device;
+      localStorage.setItem('lastConnectedDeviceId', device.id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async tryReconnectLastDevice() {
+    const lastDeviceId = localStorage.getItem('lastConnectedDeviceId');
+    if (lastDeviceId) {
+      try {
+        const devices = await navigator.bluetooth.getDevices();
+        const lastDevice = devices.find(device => device.id === lastDeviceId);
+        if (lastDevice) {
+          this.lastConnectedDevice = lastDevice;
+          await this.connectBluetooth();
+          return true;
+        }
+      } catch (error) {
+        console.log('Failed to reconnect to last device:', error);
+      }
+    }
+    return false;
   }
 
   connectRTC() {
