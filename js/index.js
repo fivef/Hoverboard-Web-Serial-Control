@@ -384,6 +384,38 @@ function displayCurrentSettings() {
 
 function populateSettingsInputs() {
   sendGetCommand();
+  createSliders();
+}
+
+function createSliders() {
+  const sliderSettings = ['I_MOT_MAX', 'N_MOT_MAX'];
+  
+  sliderSettings.forEach(setting => {
+    const inputElement = document.getElementById(`setting${setting}`);
+    if (inputElement) {
+      const min = control.params[setting].min;
+      const max = control.params[setting].max;
+      const value = inputElement.value;
+      
+      const slider = document.createElement('input');
+      slider.type = 'range';
+      slider.min = min;
+      slider.max = max;
+      slider.value = value;
+      slider.className = 'slider';
+      slider.id = `slider${setting}`;
+      
+      slider.oninput = function() {
+        inputElement.value = this.value;
+      };
+      
+      inputElement.oninput = function() {
+        slider.value = this.value;
+      };
+      
+      inputElement.parentNode.insertBefore(slider, inputElement.nextSibling);
+    }
+  });
 }
 
 function resetSetting(param) {
