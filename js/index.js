@@ -365,34 +365,48 @@ function sendGetCommand() {
 
 function parseGetResponse(response) {
   console.log('Parsing GET response:', response);
+  if (!response) {
+    console.error('Response is empty or null');
+    return;
+  }
   const lines = response.split('\n');
   const settingsContent = document.getElementById('settingsContent');
   const currentSettingsDiv = document.getElementById('currentSettings');
   
+  if (!settingsContent || !currentSettingsDiv) {
+    console.error('Required DOM elements not found');
+    return;
+  }
+
   settingsContent.innerHTML = '';
   currentSettingsDiv.innerHTML = '<h4>Current Settings:</h4>';
 
   lines.forEach((line, index) => {
     console.log(`Processing line ${index}:`, line);
     if (line.startsWith('# name:')) {
-      const [, name, value, , min, max] = line.match(/"([^"]+)"\s+value:(\d+)\s+init:\d+\s+min:(-?\d+)\s+max:(\d+)/);
-      
-      if (name in control.params) {
-        settingsContent.innerHTML += `
-          <div class="row">
-            <div class="six columns">
-              <label for="setting${name}">${name}</label>
-              <input class="u-full-width" type="number" id="setting${name}" 
-                     min="${min}" max="${max}" 
-                     value="${value}">
+      const match = line.match(/"([^"]+)"\s+value:(\d+)\s+init:\d+\s+min:(-?\d+)\s+max:(\d+)/);
+      if (match) {
+        const [, name, value, min, max] = match;
+        
+        if (name in control.params) {
+          settingsContent.innerHTML += `
+            <div class="row">
+              <div class="six columns">
+                <label for="setting${name}">${name}</label>
+                <input class="u-full-width" type="number" id="setting${name}" 
+                       min="${min}" max="${max}" 
+                       value="${value}">
+              </div>
+              <div class="six columns">
+                <p class="help-text">${control.params[name].help}</p>
+              </div>
             </div>
-            <div class="six columns">
-              <p class="help-text">${control.params[name].help}</p>
-            </div>
-          </div>
-        `;
+          `;
+        } else {
+          currentSettingsDiv.innerHTML += `<p>${name}: <span id="current${name}">${value}</span></p>`;
+        }
       } else {
-        currentSettingsDiv.innerHTML += `<p>${name}: <span id="current${name}">${value}</span></p>`;
+        console.error(`Failed to parse line: ${line}`);
       }
     }
   });

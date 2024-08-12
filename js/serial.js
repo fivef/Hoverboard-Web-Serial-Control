@@ -134,44 +134,51 @@ class Serial {
 
   async connectSerial() {
     if ("serial" in navigator) {
+      try {
+        this.port = await navigator.serial.requestPort();
+        // Open and begin reading.
+        await this.port.open({
+          baudRate: parseInt(baudrate.value)
+        });
 
-      this.port = await navigator.serial.requestPort();
-      // Open and begin reading.
-      await this.port.open({
-        baudRate: baudrate.value
-      });
+        // Update UI
+        this.setConnected();
 
-      // Update UI
-      this.setConnected();
+        while (this.port.readable) {
+          this.inputStream = this.port.readable;
+          this.reader = this.inputStream.getReader();
 
-      while (this.port.readable) {
-        this.inputStream = this.port.readable;
-        this.reader = this.inputStream.getReader();
+          try {
+            while (true) {
+              const { value, done } = await this.reader.read();
+              if (done) {
+                log.write("Reader canceled", 2);
+                break;
+              }
 
-        try {
-          while (true) {
-            const { value, done } = await this.reader.read();
-            if (done) {
-              log.write("Reader canceled", 2);
-              break;
+              this.bufferWrite(value);
+              this.readLoop();
+              if (!this.connected) break;
             }
-
-            this.bufferWrite(value);
-            this.readLoop();
-            if (!this.connected) break;
+          } catch (error) {
+            // Handle non-fatal read error.
+            console.log(error, 2);
+          } finally {
+            this.reader.releaseLock();
           }
-        } catch (error) {
-          // Handle non-fatal read error.
-          console.log(error, 2);
-        } finally {
-
+          if (!this.connected) break;
         }
-        if (!this.connected) break;
+      } catch (error) {
+        console.error("Error in connectSerial:", error);
+        log.write("Failed to connect: " + error.message, 2);
+      } finally {
+        if (this.port) {
+          await this.port.close();
+        }
+        this.setDisconnected();
       }
-
-      this.reader.releaseLock();
-      this.port.close();
-      this.setDisconnected();
+    } else {
+      log.write("Web Serial API not supported in this browser", 2);
     }
   }
 
