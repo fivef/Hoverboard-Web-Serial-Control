@@ -381,6 +381,13 @@ function populateSettingsInputs() {
   sendGetCommand();
 }
 
+function resetSetting(param) {
+  const inputElement = document.getElementById(`setting${param}`);
+  if (inputElement && control.params[param]) {
+    inputElement.value = control.params[param].init;
+  }
+}
+
 function sendGetCommand() {
   if (serial.connected) {
     console.info("Send $GET command");
@@ -418,17 +425,22 @@ function parseGetResponse(response) {
         if (name in control.params) {
           settingsContent.innerHTML += `
             <div class="row">
-              <div class="six columns">
+              <div class="five columns">
                 <label for="setting${name}">${name}</label>
                 <input class="u-full-width" type="number" id="setting${name}" 
                        min="${min}" max="${max}" 
                        value="${value}">
+              </div>
+              <div class="one column">
+                <label>&nbsp;</label>
+                <button class="button-primary" onclick="resetSetting('${name}')">Reset</button>
               </div>
               <div class="six columns">
                 <p class="help-text">${control.params[name].help}</p>
               </div>
             </div>
           `;
+          control.params[name].init = value; // Store the initial value
         } else {
           currentSettingsDiv.innerHTML += `<p>${name}: <span id="current${name}">${value}</span></p>`;
         }
