@@ -351,6 +351,8 @@ async function sendSetCommands(settings) {
     for (let param in settings) {
       const command = `$SET ${param} ${settings[param]}\r\n`;
       log.write(command, 3);
+      console.log(command);
+      
       await serial.send(new TextEncoder().encode(command), param);
       
       // Wait for the response
