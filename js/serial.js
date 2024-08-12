@@ -432,7 +432,7 @@ class Serial {
     }
 
     if (this.waiting_for_response) {
-      if (string.startsWith(`# name:"${this.waiting_param}"`)) {
+      if (string.includes(`# name:"${this.waiting_param}"`)) {
         // Correct parameter response received, now waiting for OK
         this.waiting_for_response = 'OK';
         return true;
