@@ -116,6 +116,7 @@ color:orange;
   background-color: white;
   padding: 20px;
   overflow-y: auto;
+  z-index: 1000; /* Add this line to ensure it's on top */
 }
 
 #settingsContent {
