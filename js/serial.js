@@ -399,6 +399,19 @@ class Serial {
       return false;
     }
 
+    // Parse $GET response
+    if (string.startsWith('# name:')) {
+      if (!this.getResponse) {
+        this.getResponse = '';
+      }
+      this.getResponse += string + '\n';
+      if (string.trim() === 'OK') {
+        parseGetResponse(this.getResponse);
+        this.getResponse = null;
+      }
+      return true;
+    }
+
     let words = string.split(" ");
     let message = {};
     let err = false;
@@ -420,8 +433,6 @@ class Serial {
 
       // Skip rows having empty values
       if (value === undefined) {
-        //log.write(string,3);
-        //return true;
         continue;
       }
       message[index] = value;
@@ -443,20 +454,6 @@ class Serial {
     graph.updateData(message);
     telemetry.update(message);
     if (watchIn.checked) log.writeLog(message);
-    
-    // Accumulate $GET response
-    if (this.protocol === "ascii" && typeof message === 'string' && message.startsWith('# name:')) {
-      console.log('Accumulating GET response:', message);
-      if (!this.getResponse) {
-        this.getResponse = '';
-      }
-      this.getResponse += message + '\n';
-      if (message.trim() === 'OK') {
-        console.log('GET response complete, parsing...');
-        parseGetResponse(this.getResponse);
-        this.getResponse = null;
-      }
-    }
   }
 
   sendBinary() {
