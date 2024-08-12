@@ -422,14 +422,18 @@ class Serial {
       }
     }
 
+    log.write(string, 3);
+
     // \n not found, buffer probably doesn't have enough data, exit
     if (!found) {
       return false;
     }
 
     if (string.trim() === 'OK') {
-      parseGetResponse(this.getResponse);
-      this.getResponse = '';
+      if (this.getResponse) {
+        parseGetResponse(this.getResponse);
+        this.getResponse = '';
+      }
       return true;
     }
 
