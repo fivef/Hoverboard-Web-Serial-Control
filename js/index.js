@@ -343,7 +343,19 @@ function saveSettings() {
   }
 
   control.updateSettings(newSettings);
-  alert('Settings saved!');
+  sendSetCommands(newSettings);
+}
+
+function sendSetCommands(settings) {
+  if (serial.connected) {
+    for (let param in settings) {
+      const command = `$SET ${param} ${settings[param]}\r\n`;
+      serial.send(new TextEncoder().encode(command));
+    }
+    alert('Settings saved and sent to the hoverboard!');
+  } else {
+    alert('Settings saved locally. Connect to the hoverboard to apply changes.');
+  }
 }
 
 function displayCurrentSettings() {
