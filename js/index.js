@@ -482,7 +482,24 @@ function createSliders() {
           slider.value = this.value;
         };
         
-        inputElement.parentNode.insertBefore(slider, inputElement.nextSibling);
+        const sliderContainer = document.createElement('div');
+        sliderContainer.style.display = 'flex';
+        sliderContainer.style.alignItems = 'center';
+        sliderContainer.style.width = '100%';
+
+        const minValue = document.createElement('span');
+        minValue.textContent = min;
+        minValue.style.marginRight = '10px';
+
+        const maxValue = document.createElement('span');
+        maxValue.textContent = max;
+        maxValue.style.marginLeft = '10px';
+
+        sliderContainer.appendChild(minValue);
+        sliderContainer.appendChild(slider);
+        sliderContainer.appendChild(maxValue);
+
+        inputElement.parentNode.insertBefore(sliderContainer, inputElement.nextSibling);
       }
     }
   }
