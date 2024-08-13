@@ -336,9 +336,16 @@ function toggleEngine(){
 function saveSettings() {
   const newSettings = {};
   for (let param in control.params) {
-    const inputElement = document.getElementById(`setting${param}`);
-    if (inputElement) {
-      newSettings[param] = inputElement.value;
+    if (param === 'CTRL_TYP') {
+      const dropdown = document.getElementById(`dropdown${param}`);
+      if (dropdown) {
+        newSettings[param] = dropdown.value;
+      }
+    } else {
+      const inputElement = document.getElementById(`setting${param}`);
+      if (inputElement) {
+        newSettings[param] = inputElement.value;
+      }
     }
   }
 
@@ -403,7 +410,7 @@ function createSliders() {
         const options = [
           { value: 0, text: 'COM' },
           { value: 1, text: 'SIN' },
-          { value: 2, 'text': 'FOC' }
+          { value: 2, text: 'FOC' }
         ];
         
         options.forEach(option => {
@@ -420,6 +427,9 @@ function createSliders() {
         };
         
         inputElement.parentNode.replaceChild(dropdown, inputElement);
+        
+        // Set the initial value of the dropdown
+        dropdown.value = value;
       } else {
         // Create slider for other parameters
         const slider = document.createElement('input');
