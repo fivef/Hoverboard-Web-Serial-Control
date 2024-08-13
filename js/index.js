@@ -530,9 +530,9 @@ function parseGetResponse(response) {
   lines.forEach((line, index) => {
     console.log(`Processing line ${index}:`, line);
     if (line.startsWith('# name:')) {
-      const match = line.match(/"([^"]+)"\s+value:(-?\d+)\s+init:-?\d+\s+min:(-?\d+)\s+max:(\d+)/);
+      const match = line.match(/"([^"]+)"\s+value:(-?\d+)\s+init:(-?\d+)\s+min:(-?\d+)\s+max:(\d+)/);
       if (match) {
-        const [, name, value, min, max] = match;
+        const [, name, value, init, min, max] = match;
         
         if (name in control.params) {
           settingsContent.innerHTML += `
@@ -556,7 +556,7 @@ function parseGetResponse(response) {
               </div>
             </div>
           `;
-          control.params[name].init = value; // Store the initial value
+          control.params[name].init = parseInt(init); // Store the initial value
         } else {
           currentSettingsDiv.innerHTML += `<p>${name}: <span id="current${name}">${value}</span></p>`;
         }
