@@ -403,7 +403,7 @@ function createSliders() {
         const options = [
           { value: 0, text: 'COM' },
           { value: 1, text: 'SIN' },
-          { value: 2, text: 'FOC' }
+          { value: 2, 'text': 'FOC' }
         ];
         
         options.forEach(option => {
@@ -413,15 +413,13 @@ function createSliders() {
           dropdown.appendChild(optionElement);
         });
         
+        dropdown.value = inputElement.value;
+        
         dropdown.onchange = function() {
           inputElement.value = this.value;
         };
         
-        inputElement.oninput = function() {
-          dropdown.selectedIndex = this.value;
-        };
-        
-        inputElement.parentNode.insertBefore(dropdown, inputElement.nextSibling);
+        inputElement.parentNode.replaceChild(dropdown, inputElement);
       } else {
         // Create slider for other parameters
         const slider = document.createElement('input');
