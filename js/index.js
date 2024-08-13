@@ -517,6 +517,9 @@ function resetSetting(param) {
     }
     if (dropdownElement) {
       dropdownElement.value = initialValue;
+      // Trigger change event to update any listeners
+      const event = new Event('change');
+      dropdownElement.dispatchEvent(event);
     }
   }
 }
