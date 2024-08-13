@@ -387,34 +387,65 @@ function populateSettingsInputs() {
 }
 
 function createSliders() {
-  const sliderSettings = ['I_MOT_MAX', 'N_MOT_MAX'];
-  
-  sliderSettings.forEach(setting => {
-    const inputElement = document.getElementById(`setting${setting}`);
+  for (let param in control.params) {
+    const inputElement = document.getElementById(`setting${param}`);
     if (inputElement) {
-      const min = control.params[setting].min;
-      const max = control.params[setting].max;
+      const min = control.params[param].min;
+      const max = control.params[param].max;
       const value = inputElement.value;
       
-      const slider = document.createElement('input');
-      slider.type = 'range';
-      slider.min = min;
-      slider.max = max;
-      slider.value = value;
-      slider.className = 'slider';
-      slider.id = `slider${setting}`;
-      
-      slider.oninput = function() {
-        inputElement.value = this.value;
-      };
-      
-      inputElement.oninput = function() {
-        slider.value = this.value;
-      };
-      
-      inputElement.parentNode.insertBefore(slider, inputElement.nextSibling);
+      if (param === 'CTRL_TYP') {
+        // Create dropdown for CTRL_TYP
+        const dropdown = document.createElement('select');
+        dropdown.className = 'u-full-width';
+        dropdown.id = `dropdown${param}`;
+        
+        const options = [
+          { value: 0, text: 'COM' },
+          { value: 1, text: 'SIN' },
+          { value: 2, text: 'FOC' }
+        ];
+        
+        options.forEach(option => {
+          const optionElement = document.createElement('option');
+          optionElement.value = option.value;
+          optionElement.text = option.text;
+          dropdown.appendChild(optionElement);
+        });
+        
+        dropdown.value = value;
+        
+        dropdown.onchange = function() {
+          inputElement.value = this.value;
+        };
+        
+        inputElement.oninput = function() {
+          dropdown.value = this.value;
+        };
+        
+        inputElement.parentNode.insertBefore(dropdown, inputElement.nextSibling);
+      } else {
+        // Create slider for other parameters
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = min;
+        slider.max = max;
+        slider.value = value;
+        slider.className = 'slider';
+        slider.id = `slider${param}`;
+        
+        slider.oninput = function() {
+          inputElement.value = this.value;
+        };
+        
+        inputElement.oninput = function() {
+          slider.value = this.value;
+        };
+        
+        inputElement.parentNode.insertBefore(slider, inputElement.nextSibling);
+      }
     }
-  });
+  }
 }
 
 function resetSetting(param) {
