@@ -371,7 +371,7 @@ function setIndividualSetting(param) {
   sendSetCommands(newSetting);
 }
 
-function showHint(message, duration = 10000) {
+function showHint(message, duration = 10000, isError = false) {
   const hintElement = document.getElementById('hint');
   if (!hintElement) {
     const newHint = document.createElement('div');
@@ -381,6 +381,7 @@ function showHint(message, duration = 10000) {
   const hint = document.getElementById('hint');
   hint.textContent = message;
   hint.style.display = 'block';
+  hint.style.backgroundColor = isError ? '#ff0000' : '#4CAF50';
   setTimeout(() => {
     hint.style.display = 'none';
   }, duration);
@@ -411,10 +412,10 @@ async function sendSetCommands(settings) {
       showHint('Settings saved and sent to the hoverboard!');
     } catch (error) {
       console.error('Error sending settings:', error);
-      showHint(`Error sending settings: ${error.message}. Please try again.`, 5000);
+      showHint(`Error sending settings: ${error.message}. Please try again.`, 5000, true);
     }
   } else {
-    showHint('Settings saved locally. Connect to the hoverboard to apply changes.', 5000);
+    showHint('Settings saved locally. Connect to the hoverboard to apply changes.', 5000, false);
   }
 }
 
