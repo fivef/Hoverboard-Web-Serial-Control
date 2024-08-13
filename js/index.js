@@ -508,11 +508,15 @@ function createSliders() {
 function resetSetting(param) {
   const inputElement = document.getElementById(`setting${param}`);
   const sliderElement = document.getElementById(`slider${param}`);
+  const dropdownElement = document.getElementById(`dropdown${param}`);
   if (inputElement && control.params[param]) {
     const initialValue = control.params[param].init;
     inputElement.value = initialValue;
     if (sliderElement) {
       sliderElement.value = initialValue;
+    }
+    if (dropdownElement) {
+      dropdownElement.value = initialValue;
     }
   }
 }
