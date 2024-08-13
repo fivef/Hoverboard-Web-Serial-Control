@@ -353,6 +353,24 @@ function saveSettings() {
   sendSetCommands(newSettings);
 }
 
+function setIndividualSetting(param) {
+  const newSetting = {};
+  if (param === 'CTRL_TYP') {
+    const dropdown = document.getElementById(`dropdown${param}`);
+    if (dropdown) {
+      newSetting[param] = dropdown.value;
+    }
+  } else {
+    const inputElement = document.getElementById(`setting${param}`);
+    if (inputElement) {
+      newSetting[param] = inputElement.value;
+    }
+  }
+
+  control.updateSettings(newSetting);
+  sendSetCommands(newSetting);
+}
+
 async function sendSetCommands(settings) {
   if (serial.connected) {
     try {
