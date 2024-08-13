@@ -543,13 +543,10 @@ function parseGetResponse(response) {
                        min="${min}" max="${max}" 
                        value="${value}">
               </div>
-              <div class="one column">
-                <label>&nbsp;</label>
-                <button class="button-primary" onclick="resetSetting('${name}')">Reset</button>
-              </div>
-              <div class="one column">
+              <div class="two columns">
                 <label>&nbsp;</label>
                 <button class="button-primary" onclick="setIndividualSetting('${name}')">Set</button>
+                <button class="button-primary" style="background-color: #ff4136;" onclick="resetSetting('${name}')">Reset</button>
               </div>
               <div class="five columns">
                 <p class="help-text">Min: ${min}, Max: ${max}</p>
