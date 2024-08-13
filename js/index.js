@@ -419,8 +419,13 @@ function createSliders() {
 
 function resetSetting(param) {
   const inputElement = document.getElementById(`setting${param}`);
+  const sliderElement = document.getElementById(`slider${param}`);
   if (inputElement && control.params[param]) {
-    inputElement.value = control.params[param].init;
+    const initialValue = control.params[param].init;
+    inputElement.value = initialValue;
+    if (sliderElement) {
+      sliderElement.value = initialValue;
+    }
   }
 }
 
