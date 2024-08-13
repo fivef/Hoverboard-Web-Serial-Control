@@ -413,14 +413,12 @@ function createSliders() {
           dropdown.appendChild(optionElement);
         });
         
-        dropdown.value = value;
-        
         dropdown.onchange = function() {
           inputElement.value = this.value;
         };
         
         inputElement.oninput = function() {
-          dropdown.value = this.value;
+          dropdown.selectedIndex = this.value;
         };
         
         inputElement.parentNode.insertBefore(dropdown, inputElement.nextSibling);
