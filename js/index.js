@@ -384,7 +384,6 @@ function displayCurrentSettings() {
 
 function populateSettingsInputs() {
   sendGetCommand();
-  createSliders();
 }
 
 function createSliders() {
