@@ -107,7 +107,22 @@ color:orange;
 
 .value{
   color:lightgoldenrodyellow;
- } #settingsdiv {
+ }
+
+#hint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  z-index: 1000;
+  display: none;
+}
+
+#settingsdiv {
   width: 100%;
   background-color: white;
   padding: 20px;

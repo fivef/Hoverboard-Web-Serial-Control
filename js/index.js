@@ -371,6 +371,21 @@ function setIndividualSetting(param) {
   sendSetCommands(newSetting);
 }
 
+function showHint(message, duration = 10000) {
+  const hintElement = document.getElementById('hint');
+  if (!hintElement) {
+    const newHint = document.createElement('div');
+    newHint.id = 'hint';
+    document.body.insertBefore(newHint, document.body.firstChild);
+  }
+  const hint = document.getElementById('hint');
+  hint.textContent = message;
+  hint.style.display = 'block';
+  setTimeout(() => {
+    hint.style.display = 'none';
+  }, duration);
+}
+
 async function sendSetCommands(settings) {
   if (serial.connected) {
     try {
@@ -393,13 +408,13 @@ async function sendSetCommands(settings) {
           }, 100);
         });
       }
-      alert('Settings saved and sent to the hoverboard!');
+      showHint('Settings saved and sent to the hoverboard!');
     } catch (error) {
       console.error('Error sending settings:', error);
-      alert(`Error sending settings: ${error.message}. Please try again.`);
+      showHint(`Error sending settings: ${error.message}. Please try again.`, 5000);
     }
   } else {
-    alert('Settings saved locally. Connect to the hoverboard to apply changes.');
+    showHint('Settings saved locally. Connect to the hoverboard to apply changes.', 5000);
   }
 }
 
