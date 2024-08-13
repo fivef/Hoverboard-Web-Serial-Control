@@ -320,7 +320,6 @@ class Serial {
   }
 
   readLoop() {
-    console.log("Current protocol:", this.protocol); // Debug output
     if (this.protocol.startsWith("binary")) {
       // read as long as there is enough data in the buffer
       while ((this.writeOffset) >= (this.readOffset + this.usartFeedback.byteLength)) {

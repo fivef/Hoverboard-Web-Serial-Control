@@ -399,7 +399,7 @@ async function sendSetCommands(settings) {
         
         // Wait for the response
         await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => reject(new Error('Timeout waiting for response')), 5000);
+          const timeout = setTimeout(() => reject(new Error('Timeout waiting for response')), 2000);
           const checkResponse = setInterval(() => {
             if (!serial.waiting_for_response) {
               clearInterval(checkResponse);
@@ -509,17 +509,17 @@ function resetSetting(param) {
   const inputElement = document.getElementById(`setting${param}`);
   const sliderElement = document.getElementById(`slider${param}`);
   const dropdownElement = document.getElementById(`dropdown${param}`);
-  if (inputElement && control.params[param]) {
+  if (control.params[param]) {
     const initialValue = control.params[param].init;
-    inputElement.value = initialValue;
+
+    if (inputElement) {
+      inputElement.value = initialValue;
+    }
     if (sliderElement) {
       sliderElement.value = initialValue;
     }
     if (dropdownElement) {
       dropdownElement.value = initialValue;
-      // Trigger change event to update any listeners
-      const event = new Event('change');
-      dropdownElement.dispatchEvent(event);
     }
   }
 }
