@@ -485,6 +485,8 @@ function parseGetResponse(response) {
       }
     }
   });
+
+  createSliders();
 }
 
 function update(){
