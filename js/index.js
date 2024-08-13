@@ -565,9 +565,6 @@ function parseGetResponse(response) {
                 <button class="button-primary" onclick="setIndividualSetting('${name}')">Set</button>
                 <button class="button-primary" style="background-color: #ff4136;" onclick="resetSetting('${name}')">Reset</button>
               </div>
-              <div class="five columns">
-                <p class="help-text">Min: ${min}, Max: ${max}</p>
-              </div>
             </div>
           `;
           control.params[name].init = parseInt(init); // Store the initial value
